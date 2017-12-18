@@ -1,37 +1,14 @@
 import React, { Component } from 'react';
-import { connect } from 'react-refetch'
-import axios from 'axios'
+import PropTypes from 'prop-types'
+import { connect, PromiseState} from 'react-refetch'
 import { Link } from 'react-router-dom'
-import { Route } from 'react-router-dom'
 
 class Revision extends Component {
-
-  constructor() {
-    super()
-    this.state = {}
+  static propTypes = {
+    revisionFetch: PropTypes.instanceOf(PromiseState).isRequired,
   }
 
-  handleChange = event => {
-    this.setState({data: event.target.value});
-  }
-
-  handleSubmit = event => {
-    const data = {
-      page: this.state.data
-    }
-
-    event.preventDefault();
-    axios.post(`http://0.0.0.0:5003/page/${this.props.match.params.articleTitle}`,
-    data,
-    ).then(res => {
-      if (res.data === 'success') {
-        this.props.history.push(`/articles/${this.props.match.params.articleTitle}`)
-      }
-    })
-    .catch(error => {
-      console.log(error)
-    })
-  }
+  state = {}
 
   componentWillReceiveProps(nextProps, nextState) {
     if (nextProps.revisionFetch.value) {

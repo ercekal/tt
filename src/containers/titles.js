@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
-import { connect } from 'react-refetch'
+import PropTypes from 'prop-types'
+import { connect, PromiseState } from 'react-refetch'
 import { Link } from 'react-router-dom'
 
 class Titles extends Component {
-
+  static propTypes = {
+    titlesFetch: PropTypes.instanceOf(PromiseState).isRequired,
+  }
   _renderTitles () {
-    if (this.props.titles) {
-      return this.props.titles.value.titles.map((title, i) => {
+    if (this.props.titlesFetch) {
+      return this.props.titlesFetch.value.titles.map((title, i) => {
         return (
           <div>
             <Link to={`/articles/${title}`} key={i}>{title}</Link>
@@ -17,21 +20,21 @@ class Titles extends Component {
   }
 
   render() {
-    const { titles } = this.props
+    const { titlesFetch } = this.props
 
-    if (titles.pending) {
+    if (titlesFetch.pending) {
       return (
         <div>
           Loading...
         </div>
       )
-    } else if (titles.rejected) {
+    } else if (titlesFetch.rejected) {
       return (
         <div>
           Rejected...
         </div>
       )
-    } else if (titles.fulfilled) {
+    } else if (titlesFetch.fulfilled) {
       return (
         <div className='articles'>
           Articles:
@@ -43,5 +46,5 @@ class Titles extends Component {
 }
 
 export default connect(props => ({
-  titles: `http://0.0.0.0:5003/pages`,
+  titlesFetch: `http://0.0.0.0:5003/pages`,
 }))(Titles)

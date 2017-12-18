@@ -1,18 +1,30 @@
 import _ from 'lodash'
+import PropTypes from 'prop-types'
 import React, { Component } from 'react';
-import { connect } from 'react-refetch'
+import { connect, PromiseState } from 'react-refetch'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 
+const DOMAIN = 'http://0.0.0.0:5003/page/'
 class Article extends Component {
+
+  static propTypes = {
+    articleFetch: PropTypes.instanceOf(PromiseState).isRequired,
+    postRevision: PropTypes.func.isRequired,
+    postRevisionResponse: PropTypes.instanceOf(PromiseState),
+  }
+
+  state = {
+    newData: '',
+  }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.articleFetch.value) {
-      const lastRevision = _.last(nextProps.articleFetch.value.revisions)
+      const lastRevisionNo = _.last(nextProps.articleFetch.value.revisions)
       this.setState({
-        lastRevisionNo: lastRevision,
+        lastRevisionNo,
       })
-    axios.get(`http://0.0.0.0:5003/page/${this.props.match.params.articleTitle}/${lastRevision}`)
+    axios.get(`${DOMAIN}${this.props.match.params.articleTitle}/${lastRevisionNo}`)
     .then(res => {
       this.setState({
         lastRevisionData: res.data.data,
@@ -30,24 +42,38 @@ class Article extends Component {
 
   _checkResponse () {
     const {postRevisionResponse} = this.props
-    if (postRevisionResponse) {
-      if (postRevisionResponse.meta.response.status === 200) {
-        window.location.reload()
-      } else {
-        console.log(postRevisionResponse.meta.response.status)
-      }
-    }
+    console.log(postRevisionResponse.fulfilled)
+    // if (postRevisionResponse) {
+    //   if (postRevisionResponse.meta.response.status === 200) {
+    //     window.location.reload()
+    //   } else {
+    //     console.log(postRevisionResponse.meta.response.status)
+    //   }
+    // }
   }
 
   handleSubmit = event => {
-    const data = {
-      page: this.state.newData
-    }
     event.preventDefault();
+    // const data ={
+    //   page: this.state.newData
+    // }
+    // axios.post(`${DOMAIN}${this.props.match.params.articleTitle}`,
+    // data
+    // ).then(res => {
+    //   if (res.data === 'success') {
+    //     window.location.reload()
+    //   }
+    // })
+    // .catch(err => {
+    //   console.log(err)
+    // })
+
     this.props.postRevision(this.state.newData)
     setTimeout(() => {
-      this._checkResponse(), 3000
+      this._checkResponse, 4000
     })
+    const {postRevisionResponse} = this.props
+    console.log(postRevisionResponse)
   }
 
   renderLatest () {
@@ -59,7 +85,11 @@ class Article extends Component {
             <div className='header'>
               Last revision
             </div>
-            <Link to={`/${this.props.match.params.articleTitle}/revisions/${lastRevisionNo}`} className='revision'>{lastRevisionNo}</Link>
+            <Link
+              className='revision'
+              to={`/${this.props.match.params.articleTitle}/revisions/${lastRevisionNo}`}>
+              {lastRevisionNo}
+            </Link>
           </div>
           <div className='header'>
             Content
@@ -79,7 +109,12 @@ class Article extends Component {
     return firstRevisions.map((revision, i) => {
       return (
         <div>
-          <Link to={`/${this.props.match.params.articleTitle}/revisions/${revision}`} key={i}>{revision}</Link>
+          <Link
+            key={i}
+            to={`/${this.props.match.params.articleTitle}/revisions/${revision}`}
+            >
+            {revision}
+          </Link>
         </div>
       )
     })
@@ -99,7 +134,12 @@ class Article extends Component {
             onChange={this.handleChange}
             />
         </label>
-        <button className='input' onClick={this.handleSubmit}>Submit new revision</button>
+        <button
+          className='input'
+          onClick={this.handleSubmit}
+          >
+          Submit new revision
+        </button>
       </form>
     )
   }
@@ -141,12 +181,12 @@ class Article extends Component {
   }
 }
 export default connect(props => ({
-  articleFetch: `http://0.0.0.0:5003/page/${props.match.params.articleTitle}`,
+  articleFetch: `${DOMAIN}${props.match.params.articleTitle}`,
   postRevision: page => ({
     postRevisionResponse: {
-      url: `http://0.0.0.0:5003/page/${props.match.params.articleTitle}`,
+      url: `${DOMAIN}${props.match.params.articleTitle}`,
       method: 'POST',
-      body: JSON.stringify({ page })
+      body: JSON.stringify({ page }),
     }
   })
 }))(Article)
