@@ -48,18 +48,16 @@ class Revision extends Component {
     if (this.state.updated) {
       return (
         <div>
-          <div>
-          title =>  <Link to={`/articles/${title}`}>{title}</Link>
+          <div className='title'>
+          §title =>  <Link to={`/articles/${title}`}>{title}</Link>
           </div>
-          <div>
+          <div className='revisionNo'>
             revision no =>  {this.props.match.params.revisionNo}
           </div>
-          <form>
-            <label>
-              Input =>  <input type="text" value={this.state.data} onChange={this.handleChange} />
-            </label>
-            <button onClick={this.handleSubmit}>press</button>
-          </form>
+          <br/>
+          <div className='revisionBox'>
+            {this.state.data}
+          </div>
         </div>
       )
     }

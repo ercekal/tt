@@ -38,7 +38,6 @@ class Article extends Component {
     ).then(res => {
       if (res.data === 'success') {
         window.location.reload()
-        // this.props.history.push(`/articles/${this.props.match.params.articleTitle}`)
       }
     })
     .catch(error => {
@@ -57,12 +56,12 @@ class Article extends Component {
             </div>
             <Link to={`/${this.props.match.params.articleTitle}/revisions/${lastRevisionNo}`} className='revision'>{lastRevisionNo}</Link>
           </div>
-            <br/>
-            Data
-            <div>
-              {lastRevisionData}
-            </div>
-            <br/>
+          <br/>
+          Content
+          <div className='revisionBox'>
+            {lastRevisionData}
+          </div>
+          <br/>
         </div>
       )
     }
@@ -85,9 +84,16 @@ class Article extends Component {
     return (
       <form>
         <label>
-          Input => <input type="text" value={this.state.newData} onChange={this.handleChange}/>
+          Make a new revision
+          <br/>
+          <input
+            className='input'
+            type='text'
+            value={this.state.newData}
+            onChange={this.handleChange}
+            />
         </label>
-        <button onClick={this.handleSubmit}>Submit new revision</button>
+        <button className='input' onClick={this.handleSubmit}>Submit new revision</button>
       </form>
     )
   }

@@ -33,7 +33,7 @@ class Titles extends Component {
       )
     } else if (titles.fulfilled) {
       return (
-        <div>
+        <div className='articles'>
           Articles:
           {this._renderTitles()}
         </div>

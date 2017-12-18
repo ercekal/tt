@@ -10,7 +10,7 @@ import Revision from '../components/revision'
 // with /roster or /schedule. The / route will only match
 // when the pathname is exactly the string "/"
 const Main = () => (
-  <main>
+  <main className='main'>
     <Switch>
       <Route exact path='/' component={Titles}/>
       <Route path='/articles/:articleTitle' component={Article}/>
