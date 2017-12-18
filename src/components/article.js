@@ -28,20 +28,25 @@ class Article extends Component {
     this.setState({newData: event.target.value});
   }
 
+  _checkResponse () {
+    const {postRevisionResponse} = this.props
+    if (postRevisionResponse) {
+      if (postRevisionResponse.meta.response.status === 200) {
+        window.location.reload()
+      } else {
+        console.log(postRevisionResponse.meta.response.status)
+      }
+    }
+  }
+
   handleSubmit = event => {
     const data = {
-      page: this.state.lastRevisionData
+      page: this.state.newData
     }
     event.preventDefault();
-    axios.post(`http://0.0.0.0:5003/page/${this.props.match.params.articleTitle}`,
-    data,
-    ).then(res => {
-      if (res.data === 'success') {
-        window.location.reload()
-      }
-    })
-    .catch(error => {
-      console.log(error)
+    this.props.postRevision(this.state.newData)
+    setTimeout(() => {
+      this._checkResponse(), 3000
     })
   }
 
@@ -137,4 +142,11 @@ class Article extends Component {
 }
 export default connect(props => ({
   articleFetch: `http://0.0.0.0:5003/page/${props.match.params.articleTitle}`,
+  postRevision: page => ({
+    postRevisionResponse: {
+      url: `http://0.0.0.0:5003/page/${props.match.params.articleTitle}`,
+      method: 'POST',
+      body: JSON.stringify({ page })
+    }
+  })
 }))(Article)
