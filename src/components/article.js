@@ -51,17 +51,17 @@ class Article extends Component {
       return (
         <div>
           <div>
-            <div>
+            <div className='header'>
               Last revision
             </div>
             <Link to={`/${this.props.match.params.articleTitle}/revisions/${lastRevisionNo}`} className='revision'>{lastRevisionNo}</Link>
           </div>
-          <br/>
-          Content
+          <div className='header'>
+            Content
+          </div>
           <div className='revisionBox'>
             {lastRevisionData}
           </div>
-          <br/>
         </div>
       )
     }
@@ -84,8 +84,9 @@ class Article extends Component {
     return (
       <form>
         <label>
-          Make a new revision
-          <br/>
+          <div className='header'>
+            Make a new revision
+          </div>
           <input
             className='input'
             type='text'
@@ -117,21 +118,17 @@ class Article extends Component {
       return (
         <div>
           <Link to='/'>Home</Link>
-          <br/>
-          <br/>
+          <div className='header'>
             Title
-          <br/>
+          </div>
           <strong>{articleTitle}</strong>
-          <br/>
-          <br/>
           {this.renderLatest()}
-          <br/>
-          Other revisions
-          <br/>
+          <div className='header'>
+            Other revisions
+          </div>
           <div className='firstRevisions'>
             {this.renderFirstRevisions()}
           </div>
-          <br/>
           {this.renderNewInput()}
         </div>
       )

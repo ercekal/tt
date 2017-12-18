@@ -89,14 +89,4 @@ class Revision extends Component {
 
 export default connect(props => ({
   revisionFetch: `http://0.0.0.0:5003/page/${props.match.params.articleTitle}/${props.match.params.revisionNo}`,
-  postRevision: subject => ({
-    postRevisionResponse: {
-      url: `http://0.0.0.0:5003/page/${props.match.params.articleTitle}`,
-      method: 'POST',
-      body: {
-        // data = JSON.stringify({"email": "hey@mail.com", "password": "101010"});
-        page: JSON.stringify(subject)
-      }
-    }
-  })
 }))(Revision)

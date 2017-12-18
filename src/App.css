@@ -29,8 +29,11 @@
   border: 1px solid black;
   min-width: 200px;
   min-height: 100px;
+  padding: 5px;
 }
-
+.header {
+  padding: 10px 0;
+}
 .main {
   margin: 20px;
 }
